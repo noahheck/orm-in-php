@@ -1,0 +1,89 @@
+What is ORM
+Pros and cons
+
+2 different primary patterns for ORM (data mapper vs active record)
+Pros and cons & comparison of each
+
+ORMs in PHP
+Doctrine ORM
+Eloquent
+
+
+
+I think it's perfectly reasonable to have a more relational domain model in order to simplify your object-relational mapping - martin fowler https://martinfowler.com/bliki/OrmHate.html
+One exception that comes to mind is when you're only reading from the database. ORMs are complex because they have to handle a bi-directional mapping. A uni-directional problem is much easier to work with, particularly if your needs aren't too complex and you are comfortable with SQL - martin fowler https://martinfowler.com/bliki/OrmHate.html
+
+
+---
+
+Complex structures composed of scalar data types
+
+Address book application
+- Contacts
+-> Addresses {0,}
+-> Phone Numbers {0,}
+-> Email Addresses {0,}
+
+
+
+Contacts
+|id|first_name|last_name|date_of_birth|
+
+
+
+
+Contact
+{
+    private $id;
+    private $first_name;
+
+    etc...
+}
+
+
+
+
+
+
+
+
+Addresses
+|id|contact_id|line_1|line_2|city|state|zip|type|
+
+PhoneNumbers
+|id|contact_id|number|extension|type|
+
+Emails
+|id|contact_id|address|type|
+
+
+$contact [...]
+
+$query = "SELECT * FROM addresses WHERE contact_id = ?";
+$stmt = $db->prepare($query);
+$stmt->execute([$contact->id]);
+$contactAddresses = $stmt->fetchAll();
+
+$query = "SELECT * FROM phone_numbers WHERE contact_id = ?";
+$stmt = $db->prepare($query);
+$stmt->execute([$contact->id]);
+$contactPhoneNumbers = $stmt->fetchAll();
+
+$query = "SELECT * FROM emails WHERE contact_id = ?";
+$stmt = $db->prepare($query);
+$stmt->execute([$contact->id]);
+$contactEmails = $stmt->fetchAll();
+
+
+
+
+
+$contact->addresses;
+$contact->phoneNumbers;
+$contact->emails;
+
+
+
+
+
+
